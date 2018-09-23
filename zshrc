@@ -5,7 +5,13 @@ if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
     source /etc/profile.d/vte.sh
 fi
 
-source /usr/share/zsh-antigen/antigen.zsh
+if -f /usr/share/zsh-antigen/antigen.zsh; then
+    # sudo apt install antigen
+    source /usr/share/zsh-antigen/antigen.zsh
+elif -f /usr/local/share/antigen/antigen.zsh; then
+    # brew install antigen
+    source /usr/local/share/antigen/antigen.zsh
+fi
 
 antigen use oh-my-zsh
 
