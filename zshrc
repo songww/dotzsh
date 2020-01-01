@@ -1,5 +1,5 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:$PATH
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
     source /etc/profile.d/vte.sh
@@ -17,6 +17,7 @@ antigen use oh-my-zsh
 
 antigen bundle git
 antigen bundle pip
+antigen bundle rust
 antigen bundle pyenv
 antigen bundle docker
 antigen bundle debian
@@ -41,20 +42,37 @@ antigen apply
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 alias vihosts='sudo vim /etc/hosts'
-alias vim=nvim
 
-# export PATH="/home/songww/.pyenv/bin:$PATH"
-# eval "$(pyenv init -)"
-# eval "$(pyenv virtualenv-init -)"
+if [[ `uname` == 'Darwin' ]]; then
+    alias vim=nvim
 
-# mysql-client is keg-only, which means it was not symlinked into /usr/local,
-# because conflicts with mysql.
-# If you need to have mysql-client first in your PATH run:
-export PATH="/usr/local/opt/mysql-client/bin:$PATH"
+    # mysql-client is keg-only, which means it was not symlinked into /usr/local,
+    # because conflicts with mysql.
+    # If you need to have mysql-client first in your PATH run:
+    export PATH="/Users/songww/.composer/vendor/bin:/usr/local/opt/mysql-client/bin:$PATH"
 
-# For compilers to find mysql-client you may need to set:
-export LDFLAGS=$LDFLAGS" -L/usr/local/opt/mysql-client/lib"
-export CPPFLAGS=$CPPFLAGS" -I/usr/local/opt/mysql-client/include -I/usr/local/opt/openssl/include"
+    # For compilers to find mysql-client you may need to set:
+    export LDFLAGS=$LDFLAGS" -L/usr/local/opt/mysql-client/lib"
+    export CPPFLAGS=$CPPFLAGS" -I/usr/local/opt/mysql-client/include -I/usr/local/opt/openssl/include"
 
-# For pkg-config to find mysql-client you may need to set:
-export PKG_CONFIG_PATH="/usr/local/opt/mysql-client/lib/pkgconfig"
+    # For pkg-config to find mysql-client you may need to set:
+    export PKG_CONFIG_PATH="/usr/local/opt/mysql-client/lib/pkgconfig"
+elif [[ $(uname) == 'Linux' ]]; then
+    echo Linux
+fi
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+autoload -Uz bracketed-paste-url-magic
+zle -N bracketed-paste bracketed-paste-url-magic
+
+fpath=(/usr/local/share/zsh-completions $fpath)
+
+# rust
+export RUSTUP_DIST_SERVER=https://mirrors.tuna.tsinghua.edu.cn/rustup
+
+# flutter
+export FLUTTER_STORAGE_BASE_URL="https://mirrors.tuna.tsinghua.edu.cn/flutter"
+
+# Pub 是 Dart 官方的包管理器。跨平台的前端应开发 框架 Flutter 也基于 Dart 并且可以使用大部分 Pub 中的 库。
+export PUB_HOSTED_URL="https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
