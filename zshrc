@@ -1,5 +1,5 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:$PATH
+export PATH=$HOME/.cargo/bin:$HOME/.local/bin:$PATH
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
     source /etc/profile.d/vte.sh
@@ -13,6 +13,8 @@ elif [ -f /usr/local/share/antigen/antigen.zsh ]; then
     source /usr/local/share/antigen/antigen.zsh
 fi
 
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+
 antigen use oh-my-zsh
 
 antigen bundle git
@@ -23,6 +25,8 @@ antigen bundle docker
 antigen bundle debian
 antigen bundle poetry
 antigen bundle python
+antigen bundle vscode
+antigen bundle colorize
 antigen bundle command-not-found
 
 # Syntax highlighting bundle.
@@ -35,6 +39,9 @@ antigen bundle zsh-users/zsh-completions
 # Load the theme.
 antigen theme iplaces/astro-zsh-theme astro
 
+antigen bundle IngoMeyer441/zsh-easy-motion
+antigen bundle wfxr/forgit
+
 antigen apply
 
 # export NVM_DIR="$HOME/.nvm"
@@ -42,24 +49,38 @@ antigen apply
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 alias vihosts='sudo vim /etc/hosts'
+alias top=htop
+
+alias zc='z -c'      # 严格匹配当前路径的子路径
+alias zz='z -i'      # 使用交互式选择模式
+alias zf='z -I'      # 使用 fzf 对多个结果进行选择
+alias zb='z -b'      # 快速回到父目录
+
+alias enable_proxy='export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;'
+alias disable_proxy='unset http_proxy; unset https_proxy';
+
+# general use
+alias ls='exa'                                                          # ls
+alias l='exa -lbF --git'                                                # list, size, type, git
+alias ll='exa -lbGF --git'                                             # long list
+alias llm='exa -lbGd --git --sort=modified'                            # long list, modified date sort
+alias la='exa -lbhHigUmuSa --time-style=long-iso --git --color-scale'  # all list
+alias lx='exa -lbhHigUmuSa@ --time-style=long-iso --git --color-scale' # all + extended list
+
+# specialty views
+alias lS='exa -1'                                                              # one column, just names
+alias lt='exa --tree --level=2'                                         # tree
+
+export PATH=/opt/nvim-osx64/bin:$PATH
 
 if [[ `uname` == 'Darwin' ]]; then
-    alias vim=nvim
-
-    # mysql-client is keg-only, which means it was not symlinked into /usr/local,
-    # because conflicts with mysql.
-    # If you need to have mysql-client first in your PATH run:
-    export PATH="/Users/songww/.composer/vendor/bin:/usr/local/opt/mysql-client/bin:$PATH"
-
-    # For compilers to find mysql-client you may need to set:
-    export LDFLAGS=$LDFLAGS" -L/usr/local/opt/mysql-client/lib"
-    export CPPFLAGS=$CPPFLAGS" -I/usr/local/opt/mysql-client/include -I/usr/local/opt/openssl/include"
 
     # For pkg-config to find mysql-client you may need to set:
-    export PKG_CONFIG_PATH="/usr/local/opt/mysql-client/lib/pkgconfig"
 elif [[ $(uname) == 'Linux' ]]; then
-    echo Linux
+    # echo Linux
 fi
+
+#export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.aliyun.com/homebrew/homebrew-bottles
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
@@ -69,10 +90,30 @@ zle -N bracketed-paste bracketed-paste-url-magic
 fpath=(/usr/local/share/zsh-completions $fpath)
 
 # rust
-export RUSTUP_DIST_SERVER=https://mirrors.tuna.tsinghua.edu.cn/rustup
+export RUSTUP_UPDATE_ROOT=https://mirrors.ustc.edu.cn/rust-static/rustup
+export RUSTUP_DIST_SERVER=https://mirrors.ustc.edu.cn/rust-static
 
 # flutter
 export FLUTTER_STORAGE_BASE_URL="https://mirrors.tuna.tsinghua.edu.cn/flutter"
 
 # Pub 是 Dart 官方的包管理器。跨平台的前端应开发 框架 Flutter 也基于 Dart 并且可以使用大部分 Pub 中的 库。
 export PUB_HOSTED_URL="https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+
+update-rust-analyzer () {
+    cd /usr/local/bin
+    rm -f rust-analyzer
+    https_proxy=http://127.0.0.1:1087 aria2c -c --optimize-concurrent-downloads -j 16 -s16 -x16 -k1M \
+        https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-mac \
+        -o rust-analyzer
+    chmod +x /usr/local/bin/rust-analyzer
+    cd -
+}
+
+export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+export ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/21.4.7075529
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
+
+eval "$(zoxide init zsh)"
