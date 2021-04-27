@@ -100,36 +100,41 @@ export ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/21.4.7075529
 
 export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
 
+function check_command_exists {
+    which $1 &>/dev/null
+}
+
 if [[ `uname` == 'Darwin' ]]; then
-    which zoxide; if [[ $? != 0 ]]; then
+    check_command_exists zoxide
+    if [[ $? != 0 ]]; then
         brew install zoxide
     fi
-    which exa; if [[ $? != 0 ]]; then
+    check_command_exists exa; if [[ $? != 0 ]]; then
         brew install exa
         EXA_EXISTS=0
     else
         EXA_EXISTS=1
     fi
-    which fzf; if [[ $? != 0 ]]; then
+    check_command_exists fzf; if [[ $? != 0 ]]; then
         brew install fzf
     fi
-    which htop; if [[ $? != 0 ]]; then
+    check_command_exists htop; if [[ $? != 0 ]]; then
         brew install htop
     fi
 elif [[ $(uname) == 'Linux' ]]; then
-    which zoxide; if [[ $? != 0 ]]; then
+    check_command_exists zoxide; if [[ $? != 0 ]]; then
         echo please install `zoxide`
     fi
-    which exa; if [[ $? != 0 ]]; then
+    check_command_exists exa; if [[ $? != 0 ]]; then
         echo please install `exa`
         EXA_EXISTS=0
     else
         EXA_EXISTS=1
     fi
-    which fzf; if [[ $? != 0 ]]; then
+    check_command_exists fzf; if [[ $? != 0 ]]; then
         echo please install `fzf`
     fi
-    which htop; if [[ $? != 0 ]]; then
+    check_command_exists htop; if [[ $? != 0 ]]; then
         echo please install `htop`
     fi
 fi
