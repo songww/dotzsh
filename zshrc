@@ -59,28 +59,12 @@ alias zb='z -b'      # 快速回到父目录
 alias enable_proxy='export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;'
 alias disable_proxy='unset http_proxy; unset https_proxy';
 
-# general use
-alias ls='exa'                                                          # ls
-alias l='exa -lbF --git'                                                # list, size, type, git
-alias ll='exa -lbGF --git'                                             # long list
-alias llm='exa -lbGd --git --sort=modified'                            # long list, modified date sort
-alias la='exa -lbhHigUmuSa --time-style=long-iso --git --color-scale'  # all list
-alias lx='exa -lbhHigUmuSa@ --time-style=long-iso --git --color-scale' # all + extended list
-
-# specialty views
-alias lS='exa -1'                                                              # one column, just names
-alias lt='exa --tree --level=2'                                         # tree
-
 export PATH=/opt/nvim-osx64/bin:$PATH
 
-if [[ `uname` == 'Darwin' ]]; then
+alias enable_proxy='export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;'
+alias disable_proxy='unset http_proxy; unset https_proxy';
 
-    # For pkg-config to find mysql-client you may need to set:
-elif [[ $(uname) == 'Linux' ]]; then
-    # echo Linux
-fi
-
-#export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.aliyun.com/homebrew/homebrew-bottles
+#export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
@@ -115,5 +99,53 @@ export ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/21.4.7075529
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
+
+if [[ `uname` == 'Darwin' ]]; then
+    which zoxide; if [[ $? != 0 ]]; then
+        brew install zoxide
+    fi
+    which exa; if [[ $? != 0 ]]; then
+        brew install exa
+        EXA_EXISTS=0
+    else
+        EXA_EXISTS=1
+    fi
+    which fzf; if [[ $? != 0 ]]; then
+        brew install fzf
+    fi
+    which htop; if [[ $? != 0 ]]; then
+        brew install htop
+    fi
+elif [[ $(uname) == 'Linux' ]]; then
+    which zoxide; if [[ $? != 0 ]]; then
+        echo please install `zoxide`
+    fi
+    which exa; if [[ $? != 0 ]]; then
+        echo please install `exa`
+        EXA_EXISTS=0
+    else
+        EXA_EXISTS=1
+    fi
+    which fzf; if [[ $? != 0 ]]; then
+        echo please install `fzf`
+    fi
+    which htop; if [[ $? != 0 ]]; then
+        echo please install `htop`
+    fi
+fi
+
+if [[ $EXA_EXISTS == 1 ]]; then
+    # general use
+    alias ls='exa'                                                          # ls
+    alias l='exa -lbF --git'                                                # list, size, type, git
+    alias ll='exa -lbGF --git'                                             # long list
+    alias llm='exa -lbGd --git --sort=modified'                            # long list, modified date sort
+    alias la='exa -lbhHigUmuSa --time-style=long-iso --git --color-scale'  # all list
+    alias lx='exa -lbhHigUmuSa@ --time-style=long-iso --git --color-scale' # all + extended list
+
+    # specialty views
+    alias lS='exa -1'                                                              # one column, just names
+    alias lt='exa --tree --level=2'                                         # tree
+fi
 
 eval "$(zoxide init zsh)"
