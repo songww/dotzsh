@@ -84,13 +84,13 @@ export FLUTTER_STORAGE_BASE_URL="https://mirrors.tuna.tsinghua.edu.cn/flutter"
 export PUB_HOSTED_URL="https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
 
 update-rust-analyzer () {
-    cd /usr/local/bin
-    rm -f rust-analyzer
     https_proxy=http://127.0.0.1:1087 aria2c -c --optimize-concurrent-downloads -j 16 -s16 -x16 -k1M \
-        https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-mac \
-        -o rust-analyzer
+        https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-x86_64-apple-darwin.gz \
+        -o rust-analyzer-x86_64-apple-darwin.gz \
+        -d /tmp
+    gunzip -dv /tmp/rust-analyzer-x86_64-apple-darwin.gz
+    mv /tmp/rust-analyzer-x86_64-apple-darwin /usr/local/bin/rust-analyzer
     chmod +x /usr/local/bin/rust-analyzer
-    cd -
 }
 
 export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
