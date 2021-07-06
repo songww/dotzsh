@@ -63,8 +63,6 @@ alias zb='z -b'      # 快速回到父目录
 alias enable_proxy='export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;'
 alias disable_proxy='unset http_proxy; unset https_proxy';
 
-export PATH=/opt/nvim-osx64/bin:$PATH
-
 alias enable_proxy='export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;'
 alias disable_proxy='unset http_proxy; unset https_proxy';
 
