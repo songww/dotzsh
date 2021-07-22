@@ -1,5 +1,5 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$HOME/.cargo/bin:$HOME/.local/bin:$PATH
+export PATH=$HOME/.cargo/bin:$HOME/.local/bin:$PATH:/usr/local/sbin
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
     source /etc/profile.d/vte.sh
@@ -13,14 +13,18 @@ elif [ -f /usr/local/share/antigen/antigen.zsh ]; then
     source /usr/local/share/antigen/antigen.zsh
 fi
 
-export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+export PYENV_VIRTUALENV_DISABLE_PROMPT=0
+
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"
 
 antigen use oh-my-zsh
 
 antigen bundle git
 antigen bundle pip
 antigen bundle rust
-antigen bundle pyenv
+#antigen bundle pyenv
 antigen bundle docker
 antigen bundle debian
 antigen bundle poetry
@@ -59,8 +63,6 @@ alias zb='z -b'      # 快速回到父目录
 alias enable_proxy='export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;'
 alias disable_proxy='unset http_proxy; unset https_proxy';
 
-export PATH=/opt/nvim-osx64/bin:$PATH
-
 alias enable_proxy='export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;'
 alias disable_proxy='unset http_proxy; unset https_proxy';
 
@@ -84,11 +86,14 @@ export FLUTTER_STORAGE_BASE_URL="https://mirrors.tuna.tsinghua.edu.cn/flutter"
 export PUB_HOSTED_URL="https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
 
 update-rust-analyzer () {
-    https_proxy=http://127.0.0.1:1087 aria2c -c --optimize-concurrent-downloads -j 16 -s16 -x16 -k1M \
+    aria2c -c --optimize-concurrent-downloads -j 16 -s16 -x16 -k1M \
+        --download-result=hide --log-level=error --console-log-level=error --file-allocation=none \
+        --all-proxy=http://127.0.0.1:1087 \
         https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-x86_64-apple-darwin.gz \
         -o rust-analyzer-x86_64-apple-darwin.gz \
         -d /tmp
-    gunzip -dv /tmp/rust-analyzer-x86_64-apple-darwin.gz
+    echo ""
+    gunzip -d /tmp/rust-analyzer-x86_64-apple-darwin.gz
     mv /tmp/rust-analyzer-x86_64-apple-darwin /usr/local/bin/rust-analyzer
     chmod +x /usr/local/bin/rust-analyzer
 }
