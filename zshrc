@@ -1,5 +1,5 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=$HOME/.cargo/bin:$HOME/.local/bin:$PATH:/usr/local/sbin
+export PATH=/usr/lib/cargo/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH:/usr/local/sbin
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
     source /etc/profile.d/vte.sh
@@ -86,16 +86,29 @@ export FLUTTER_STORAGE_BASE_URL="https://mirrors.tuna.tsinghua.edu.cn/flutter"
 export PUB_HOSTED_URL="https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
 
 update-rust-analyzer () {
-    aria2c -c --optimize-concurrent-downloads -j 16 -s16 -x16 -k1M \
-        --download-result=hide --log-level=error --console-log-level=error --file-allocation=none \
-        --all-proxy=http://127.0.0.1:1087 \
-        https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-x86_64-apple-darwin.gz \
-        -o rust-analyzer-x86_64-apple-darwin.gz \
-        -d /tmp
+    set -pipe
+    if [[ "$(uname)" == "Linux" ]]; then
+        target=rust-analyzer-x86_64-unknown-linux-gnu
+        mybesudo=sudo
+        aria2c -c --optimize-concurrent-downloads -j 16 -s16 -x16 -k1M \
+            --download-result=hide --log-level=error --console-log-level=error --file-allocation=none \
+            https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-x86_64-unknown-linux-gnu.gz \
+            -o $target.gz \
+            -d /tmp
+    elif [[ "$(uname)" == "Darwin" ]]; then
+        target=rust-analyzer-x86_64-apple-darwin
+        mybesudo=
+        aria2c -c --optimize-concurrent-downloads -j 16 -s16 -x16 -k1M \
+            --download-result=hide --log-level=error --console-log-level=error --file-allocation=none \
+            --all-proxy=http://127.0.0.1:1087 \
+            https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-x86_64-apple-darwin.gz \
+            -o $target.gz \
+            -d /tmp
+    fi
     echo ""
-    gunzip -d /tmp/rust-analyzer-x86_64-apple-darwin.gz
-    mv /tmp/rust-analyzer-x86_64-apple-darwin /usr/local/bin/rust-analyzer
-    chmod +x /usr/local/bin/rust-analyzer
+    gunzip -fd /tmp/$target.gz
+    $mybesudo mv /tmp/$target /usr/local/bin/rust-analyzer
+    $mybesudo chmod +x /usr/local/bin/rust-analyzer
 }
 
 export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
@@ -162,4 +175,3 @@ eval "$(zoxide init zsh)"
 
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
-
