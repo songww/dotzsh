@@ -86,13 +86,14 @@ export FLUTTER_STORAGE_BASE_URL="https://mirrors.tuna.tsinghua.edu.cn/flutter"
 export PUB_HOSTED_URL="https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
 
 update-rust-analyzer () {
-    set -pipe
+    set -e -o pipefail
     if [[ "$(uname)" == "Linux" ]]; then
         target=rust-analyzer-x86_64-unknown-linux-gnu
         mybesudo=sudo
         aria2c -c --optimize-concurrent-downloads -j 16 -s16 -x16 -k1M \
             --download-result=hide --log-level=error --console-log-level=error --file-allocation=none \
             https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-x86_64-unknown-linux-gnu.gz \
+            --all-proxy=http://127.0.0.1:1087 \
             -o $target.gz \
             -d /tmp
     elif [[ "$(uname)" == "Darwin" ]]; then
@@ -109,6 +110,7 @@ update-rust-analyzer () {
     gunzip -fd /tmp/$target.gz
     $mybesudo mv /tmp/$target /usr/local/bin/rust-analyzer
     $mybesudo chmod +x /usr/local/bin/rust-analyzer
+    set +e +o pipefail
 }
 
 export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
