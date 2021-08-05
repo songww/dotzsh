@@ -86,7 +86,7 @@ export FLUTTER_STORAGE_BASE_URL="https://mirrors.tuna.tsinghua.edu.cn/flutter"
 export PUB_HOSTED_URL="https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
 
 update-rust-analyzer () {
-    set -e -o pipefail
+    set -e
     if [[ "$(uname)" == "Linux" ]]; then
         target=rust-analyzer-x86_64-unknown-linux-gnu
         mybesudo=sudo
