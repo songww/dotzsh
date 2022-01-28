@@ -1,5 +1,6 @@
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-export PATH=/usr/lib/cargo/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH:/usr/local/sbin
+export PATH=$HOME/.npm-global/bin:/usr/lib/cargo/bin:$HOME/.cargo/bin:$HOME/.bin:$HOME/.local/bin:$PATH:/usr/local/sbin
+
+__FILE__=${(%):-%x}
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
     source /etc/profile.d/vte.sh
@@ -85,34 +86,6 @@ export FLUTTER_STORAGE_BASE_URL="https://mirrors.tuna.tsinghua.edu.cn/flutter"
 # Pub 是 Dart 官方的包管理器。跨平台的前端应开发 框架 Flutter 也基于 Dart 并且可以使用大部分 Pub 中的 库。
 export PUB_HOSTED_URL="https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
 
-update-rust-analyzer () {
-    set -e
-    if [[ "$(uname)" == "Linux" ]]; then
-        target=rust-analyzer-x86_64-unknown-linux-gnu
-        mybesudo=sudo
-        aria2c -c --optimize-concurrent-downloads -j 16 -s16 -x16 -k1M \
-            --download-result=hide --log-level=error --console-log-level=error --file-allocation=none \
-            https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-x86_64-unknown-linux-gnu.gz \
-            --all-proxy=http://127.0.0.1:1087 \
-            -o $target.gz \
-            -d /tmp
-    elif [[ "$(uname)" == "Darwin" ]]; then
-        target=rust-analyzer-x86_64-apple-darwin
-        mybesudo=
-        aria2c -c --optimize-concurrent-downloads -j 16 -s16 -x16 -k1M \
-            --download-result=hide --log-level=error --console-log-level=error --file-allocation=none \
-            --all-proxy=http://127.0.0.1:1087 \
-            https://github.com/rust-analyzer/rust-analyzer/releases/download/nightly/rust-analyzer-x86_64-apple-darwin.gz \
-            -o $target.gz \
-            -d /tmp
-    fi
-    echo ""
-    gunzip -fd /tmp/$target.gz
-    $mybesudo mv /tmp/$target /usr/local/bin/rust-analyzer
-    $mybesudo chmod +x /usr/local/bin/rust-analyzer
-    set +e +o pipefail
-}
-
 export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
 export ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/21.4.7075529
 
@@ -172,6 +145,11 @@ if [[ $EXA_EXISTS == 1 ]]; then
     alias lS='exa -1'                                                              # one column, just names
     alias lt='exa --tree --level=2'                                         # tree
 fi
+
+alias v=lvim
+alias vim=lvim
+
+export EDITOR=lvim
 
 eval "$(zoxide init zsh)"
 
