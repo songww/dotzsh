@@ -26,8 +26,9 @@ antigen bundle git
 antigen bundle pip
 antigen bundle rust
 #antigen bundle pyenv
-antigen bundle docker
 antigen bundle debian
+antigen bundle docker
+antigen bundle dotenv
 antigen bundle poetry
 antigen bundle python
 antigen bundle vscode
@@ -48,10 +49,6 @@ antigen bundle IngoMeyer441/zsh-easy-motion
 antigen bundle wfxr/forgit
 
 antigen apply
-
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 alias vihosts='sudo vim /etc/hosts'
 alias top=htop
