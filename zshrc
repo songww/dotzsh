@@ -58,6 +58,8 @@ alias zz='z -i'      # 使用交互式选择模式
 alias zf='z -I'      # 使用 fzf 对多个结果进行选择
 alias zb='z -b'      # 快速回到父目录
 
+#alias ssh='kitty +kitten ssh'
+
 alias enable_proxy='export http_proxy=http://127.0.0.1:1087;export https_proxy=http://127.0.0.1:1087;'
 alias disable_proxy='unset http_proxy; unset https_proxy';
 
@@ -143,11 +145,12 @@ if [[ $EXA_EXISTS == 1 ]]; then
     alias lt='exa --tree --level=2'                                         # tree
 fi
 
-alias v=lvim
-alias vim=lvim
+alias rv=rv --nvim /opt/neovim/bin/nvim
+alias v=rv
 
 export EDITOR=lvim
 
+eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
 
 # Generated for envman. Do not edit.
