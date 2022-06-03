@@ -1,4 +1,4 @@
-export PATH=$HOME/.npm-global/bin:/usr/lib/cargo/bin:$HOME/.cargo/bin:$HOME/.bin:$HOME/.local/bin:$PATH:/usr/local/sbin
+export PATH=$HOME/.npm-global/bin:$HOME/.cargo/bin:/usr/lib/cargo/bin:$HOME/.bin:$HOME/.local/bin:$HOME/.local/share/neovim/bin:$PATH
 
 __FILE__=${(%):-%x}
 
@@ -25,10 +25,8 @@ antigen use oh-my-zsh
 antigen bundle git
 antigen bundle pip
 antigen bundle rust
-#antigen bundle pyenv
 antigen bundle debian
 antigen bundle docker
-antigen bundle dotenv
 antigen bundle poetry
 antigen bundle python
 antigen bundle vscode
@@ -85,12 +83,12 @@ export FLUTTER_STORAGE_BASE_URL="https://mirrors.tuna.tsinghua.edu.cn/flutter"
 # Pub 是 Dart 官方的包管理器。跨平台的前端应开发 框架 Flutter 也基于 Dart 并且可以使用大部分 Pub 中的 库。
 export PUB_HOSTED_URL="https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
 
-export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
-export ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/21.4.7075529
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
+# export ANDROID_SDK_ROOT=$HOME/Library/Android/sdk
+# export ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/21.4.7075529
+#
+# export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH
 
 function check_command_exists {
     which $1 &>/dev/null
@@ -148,10 +146,7 @@ fi
 alias rv=rv --nvim /opt/neovim/bin/nvim
 alias v=rv
 
-export EDITOR=lvim
+export EDITOR=vim
 
 eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
-
-# Generated for envman. Do not edit.
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
